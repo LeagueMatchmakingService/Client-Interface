@@ -1,37 +1,75 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Client-Interface</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+﻿<header class="header">
+    <!--Main-Menu Area Start-->
+    <div class="mainmenu-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <a class="navbar-brand" href="index.html">
+                            <img src="assets/images/logo.png" alt="">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_menu" aria-controls="main_menu"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse fixed-height" id="main_menu">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="">
+                                        Home
+                                        <div class="mr-hover-effect"></div>
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="">
+                                        Leaderboard
+                                        <div class="mr-hover-effect"></div>
+                                    </NavLink>
+                                </li>
+                                @*<li class="nav-item">
+                                        <a class="nav-link" href="lottery.html">
+                                            lottery
+                                            <div class="mr-hover-effect"></div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="tournaments.html">
+                                            tournaments
+                                            <div class="mr-hover-effect"></div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                                           aria-expanded="false">
+                                            Pages
+                                            <div class="mr-hover-effect"></div>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="about.html"> <i class="fa fa-angle-double-right"></i>About</a></li>
+                                            <li><a class="dropdown-item" href="affiliate.html"> <i class="fa fa-angle-double-right"></i>Affiliate</a></li>
+                                            <li><a class="dropdown-item" href="awards.html"> <i class="fa fa-angle-double-right"></i>Awards</a></li>
+                                            <li><a class="dropdown-item" href="bonus.html"> <i class="fa fa-angle-double-right"></i>Bonus</a></li>
+                                            <li><a class="dropdown-item" href="cart.html"> <i class="fa fa-angle-double-right"></i>Cart</a></li>
+                                            <li><a class="dropdown-item" href="faq.html"> <i class="fa fa-angle-double-right"></i>Faq</a></li>
+                                            <li><a class="dropdown-item" href="how-it-work.html"> <i class="fa fa-angle-double-right"></i>How It Work</a></li>
+                                            <li><a class="dropdown-item" href="terms-conditions.html"> <i class="fa fa-angle-double-right"></i>Terms & Condition</a></li>
+                                            <li><a class="dropdown-item" href="terms-conditions-details.html"> <i class="fa fa-angle-double-right"></i>Condition Details</a></li>
+                                            <li><a class="dropdown-item" href="404.html"> <i class="fa fa-angle-double-right"></i>404</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="contact.html">
+                                            Contact
+                                            <div class="mr-hover-effect"></div>
+                                        </a>
+                                    </li>*@
+                            </ul>
+                            <NavLink href="Matchmaking" class="mybtn1">PLAY</NavLink>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Main-Menu Area Start-->
+</header>

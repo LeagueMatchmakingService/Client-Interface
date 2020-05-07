@@ -1,0 +1,146 @@
+﻿@page "/Matchmaking"
+
+@using System.Text.Json
+@using Chromely.Core
+@using Chromely.CefGlue
+@using Microsoft.AspNetCore.SignalR.Client
+@using System.Timers 
+
+@inject IJSRuntime JSRuntime
+@inject ServerAppDemo.Models.MatchCreation mc;
+
+<section class="play-games">
+    @if (inQueue)
+    {
+        <div class="queue">
+            @timer
+        </div>
+    }
+    else
+    {
+        <div class="all-games">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-tab1" role="tabpanel" aria-labelledby="pills-tab1-tab">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="single-game">
+                                            <img src="/Content/img/oneVone.png" alt="">
+                                           
+                                            <button class="mybtn2" @onclick="JoinOneVOneQueue">PLay NoW !</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="single-game">
+                                            <img src="assets/images/game/icon2.png" alt="">
+                                            <a href="#" class="mybtn2">PLay NoW !</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</section>
+
+@code {
+
+    HubConnection hubConnection;
+
+    private bool inQueue { get; set; }
+    public string textMatchFound { get; set; }
+    public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
+    private string SummonerId { get; set; }
+
+    Task QueueForOneVOne() => hubConnection.SendAsync("JoinMatchmaking", SummonerId);
+
+    protected override async Task OnInitializedAsync()
+    {
+        SummonerId = await mc.GetSummonerId();
+
+        inQueue = false;
+
+    }
+
+    private async Task JoinOneVOneQueue(MouseEventArgs x)
+    {
+
+        try
+        {
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl("https://localhost:44371/onevone")
+                .Build();
+
+            hubConnection.On<Match>("MatchFound", (match) =>
+            {
+                MatchFound(match);
+            });
+
+            await hubConnection.StartAsync();
+            await QueueForOneVOne();
+            inQueue = true;
+            await StartTimer();
+
+
+        }
+        catch (Exception e)
+        {
+            Console.Write(e.Message);
+        }
+    }
+
+    private async Task MatchFound(Match match)
+    {
+        if (match.BluePlayer.SummonerId == SummonerId)
+        {
+            await mc.CreateOneOnOneGame(match.MatchId, match.RedPlayer.SummonerId);
+        }
+        else if (match.RedPlayer.SummonerId == SummonerId)
+        {
+            await mc.JoinGame(match.BluePlayer.SummonerId, match.MatchId);
+        }
+    }
+
+    TimeSpan timer = new TimeSpan();
+    bool is_timerRunning = false;
+    async Task StartTimer()
+    {
+        is_timerRunning = true;
+        while (is_timerRunning)
+        {
+            await Task.Delay(1000);
+            if (is_timerRunning)
+            {
+                timer = timer.Add(new TimeSpan(0, 0, 1));
+                StateHasChanged();
+            }
+        }
+    }
+
+
+
+    #region Model
+    private class Match
+    {
+        public string MatchId { get; set; }
+        public Player RedPlayer { get; set; }
+        public Player BluePlayer { get; set; }
+
+    }
+    private class Player
+    {
+        public string ConnectionId { get; set; }
+        public string SummonerId { get; set; }
+        public int Elo { get; set; }
+        public int SearchElo { get; set; }
+        public DateTime Created { get; set; }
+    }
+    #endregion Model
+
+
+}

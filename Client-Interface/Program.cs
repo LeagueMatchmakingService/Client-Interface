@@ -1,27 +1,19 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
-using Chromely;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Chromely.Core;
 using Chromely.Core.Configuration;
+using Chromely;
+using System.Threading;
+using System.Reflection;
 using Chromely.Core.Network;
-using Client_Interface.ChromelyControllers;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using ServerAppDemo.ChromelyControllers;
 
-namespace Client_Interface
+namespace ServerAppDemo
 {
     public class Program
     {
-
-        [STAThread]
         public static void Main(string[] args)
         {
             var appName = Assembly.GetEntryAssembly()?.GetName().Name;
@@ -57,7 +49,7 @@ namespace Client_Interface
                 // start up chromely
                 var core = typeof(IChromelyConfiguration).Assembly;
                 var config = DefaultConfiguration.CreateForRuntimePlatform();
-                config.WindowOptions.Title = "blazor server app demo";
+                config.WindowOptions.Title = "League of legends Matchmaking Service";
                 config.StartUrl = $"https://127.0.0.1:{port}";
                 config.DebuggingMode = true;
                 config.WindowOptions.RelativePathToIconFile = "chromely.ico";
@@ -66,7 +58,7 @@ namespace Client_Interface
                 {
                     var builder = AppBuilder.Create();
                     builder = builder.UseConfiguration<DefaultConfiguration>(config);
-                    builder = builder.UseApp<InterfaceApp>();
+                    builder = builder.UseApp<DemoChromelyApp>();
                     builder = builder.Build();
                     builder.Run(args);
                 }
@@ -79,7 +71,7 @@ namespace Client_Interface
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args, int port) =>
-                    Host.CreateDefaultBuilder(args)
+            Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
@@ -88,11 +80,13 @@ namespace Client_Interface
                 });
     }
 
-    public class InterfaceApp : ChromelyBasicApp
+    public class DemoChromelyApp : ChromelyBasicApp
     {
         public override void Configure(IChromelyContainer container)
         {
             base.Configure(container);
+            container.RegisterSingleton(typeof(ChromelyController), Guid.NewGuid().ToString(), typeof(DemoController));
+            container.RegisterSingleton(typeof(ChromelyController), Guid.NewGuid().ToString(), typeof(ExecuteJavaScriptDemoController));
             container.RegisterSingleton(typeof(ChromelyController), Guid.NewGuid().ToString(), typeof(MatchmakingController));
         }
     }

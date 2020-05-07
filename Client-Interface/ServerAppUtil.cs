@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Threading.Tasks;
 
-namespace Client_Interface
+namespace ServerAppDemo
 {
     public static class ServerAppUtil
     {
@@ -14,7 +12,7 @@ namespace Client_Interface
         private const int StartScan = 5050;
         private const int EndScan = 6000;
         private const string ArgumentType = "--type";
-
+     
         public static int AvailablePort
         {
             get
@@ -45,7 +43,7 @@ namespace Client_Interface
 
             return false;
         }
-
+  
         public static bool IsPortAvailable(int port)
         {
             var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();

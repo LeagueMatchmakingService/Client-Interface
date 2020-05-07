@@ -1,15 +1,30 @@
 ﻿@inherits LayoutComponentBase
-
-<div class="sidebar">
-    <NavMenu />
-</div>
-
-<div class="main">
-    <div class="top-row px-4">
-        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+@inject NavigationManager NavigationManager
+<!-- preloader area start -->
+@*@if (!Loaded)
+{
+    <div class="preloader" id="preloader">
+        <div class="loader loader-1">
+            <div class="loader-outter"></div>
+            <div class="loader-inner"></div>
+        </div>
     </div>
+}*@
 
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
+<NavMenu />
+@Body
+
+
+@code {
+
+    private bool Loaded = false;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        Loaded = true;
+    }
+}
