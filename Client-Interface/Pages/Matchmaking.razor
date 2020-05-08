@@ -4,12 +4,12 @@
 @using Chromely.Core
 @using Chromely.CefGlue
 @using Microsoft.AspNetCore.SignalR.Client
-@using System.Timers 
+@using System.Timers
 
 @inject IJSRuntime JSRuntime
-@inject ServerAppDemo.Models.MatchCreation mc;
+@inject ServerAppDemo.Models.MatchCreation mc
 
-<section class="play-games">
+<section>
     @if (inQueue)
     {
         <div class="queue">
@@ -18,29 +18,36 @@
     }
     else
     {
-        <div class="all-games">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 text-center">
-                        <div class="tab-content" id="pills-tabContent">
-                            <div class="tab-pane fade show active" id="pills-tab1" role="tabpanel" aria-labelledby="pills-tab1-tab">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="single-game">
-                                            <img src="/Content/img/oneVone.png" alt="">
-                                           
-                                            <button class="mybtn2" @onclick="JoinOneVOneQueue">PLay NoW !</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="single-game">
-                                            <img src="assets/images/game/icon2.png" alt="">
-                                            <a href="#" class="mybtn2">PLay NoW !</a>
-                                        </div>
-                                    </div>
-                                </div>
+        <div class="queues">
+            <div class="queue-box">
+                <div class="queue-btn">
+                    @if (TryingToJoinQueue)
+                    {
+                        <button @onclick="JoinOneVOneQueue" disabled>Queue up</button>
+                    }
+                    else
+                    {
+                        <button @onclick="JoinOneVOneQueue">Queue up</button>
+                    }
+                </div>
+                <div class="queue-top">
+                    <div class="queue-header">
+                        <h2>1v1</h2>
+                    </div>
+                    <div class="queue-content">
+                        @if (CurrentMMR == null)
+                        {
+                            <div class="threes">
+                                <div class="three-1 three"></div>
+                                <div class="three-2 three"></div>
+                                <div class="three-3 three"></div>
                             </div>
-                        </div>
+                        }
+                        else
+                        {
+                            <h3>MMR @CurrentMMR</h3>
+                        }
+
                     </div>
                 </div>
             </div>
@@ -49,36 +56,47 @@
 </section>
 
 @code {
-
     HubConnection hubConnection;
 
     private bool inQueue { get; set; }
     public string textMatchFound { get; set; }
     public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
     private string SummonerId { get; set; }
-
+    private bool TryingToJoinQueue = false;
+    private int? CurrentMMR { get; set; }
     Task QueueForOneVOne() => hubConnection.SendAsync("JoinMatchmaking", SummonerId);
 
     protected override async Task OnInitializedAsync()
     {
+        CurrentMMR = null;
         SummonerId = await mc.GetSummonerId();
-
         inQueue = false;
 
     }
 
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (!string.IsNullOrWhiteSpace(SummonerId) && CurrentMMR == null)
+        {
+            CurrentMMR = await mc.GetSummonerMMR(SummonerId);
+            StateHasChanged();
+        }
+    }
+
+
     private async Task JoinOneVOneQueue(MouseEventArgs x)
     {
-
+        TryingToJoinQueue = true;
         try
         {
             hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:44371/onevone")
+                .WithUrl("https://onevonehub20200507160408.azurewebsites.net/onevone")
                 .Build();
 
-            hubConnection.On<Match>("MatchFound", (match) =>
+            hubConnection.On<Match>("MatchNotification", (match) =>
             {
                 MatchFound(match);
+
             });
 
             await hubConnection.StartAsync();
@@ -94,8 +112,11 @@
         }
     }
 
-    private async Task MatchFound(Match match)
+    private async void MatchFound(Match match)
     {
+        inQueue = false;
+        is_timerRunning = false;
+        timer = new TimeSpan();
         if (match.BluePlayer.SummonerId == SummonerId)
         {
             await mc.CreateOneOnOneGame(match.MatchId, match.RedPlayer.SummonerId);

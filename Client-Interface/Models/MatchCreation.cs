@@ -3,6 +3,7 @@ using ServerAppDemo.Models.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ServerAppDemo.Models
@@ -10,6 +11,19 @@ namespace ServerAppDemo.Models
     public class MatchCreation
     {
         public ILeagueClient League;
+
+        public async Task<bool> CheckIfLeagueIsOpen()
+        {
+            try
+            {
+                League = await LeagueClient.Connect();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
 
         public async Task LogIn()
         {
@@ -28,13 +42,22 @@ namespace ServerAppDemo.Models
 
         public async Task<string> GetSummonerId()
         {
-            if(League == null)
+            if (League == null)
             {
                 League = await LeagueClient.Connect();
             }
             Summoners sum = new Summoners(League);
             var player = await sum.GetCurrentSummoner();
             return player.SummonerId.ToString();
+        }
+
+        public async Task<int> GetSummonerMMR(string summonerId)
+        {
+            var http = new HttpClient();
+            var uri = "https://elorestapi.azurewebsites.net/api/Elo/GetOneVOneElo/" + summonerId;
+            var response = await http.GetAsync(uri);
+            var elo = JsonConvert.DeserializeObject<int>(await response.Content.ReadAsStringAsync());
+            return elo;
         }
 
 

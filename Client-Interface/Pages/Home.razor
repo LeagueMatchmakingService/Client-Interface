@@ -1,7 +1,7 @@
 ﻿@page "/"
 @using System.Text.Json
 @inject IJSRuntime JSRuntime
-
+@inject ServerAppDemo.Models.MatchCreation mc
 <div class="hero-area">
     <div class="container">
         <div class="row">
@@ -15,8 +15,8 @@
                             for League of Legends
                         </h1>
                         @*<p class="text">
-                            Play, and rise your MMR to reach the top of the leaderboard
-                        </p>*@
+                                Play, and rise your MMR to reach the top of the leaderboard
+                            </p>*@
                         <div class="links">
                             <NavLink href="Matchmaking" class="mybtn1" data-toggle="modal" data-target="#signin">PLAY NOW</NavLink>
                         </div>
@@ -27,13 +27,16 @@
     </div>
 </div>
 
+
+
 @code {
 
     private string _divObjective = string.Empty;
     private string _divPlatform = string.Empty;
     private string _divVersion = string.Empty;
 
-    protected override void OnAfterRender(bool firstRender)
+
+    protected override async void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
         if (firstRender)
@@ -42,7 +45,7 @@
             jsRequest.Url = "/info";
             jsRequest.JSInvokeId = "HomeCallback";
             var dotNetReference = DotNetObjectReference.Create(this);
-            JSRuntime.InvokeVoidAsync("MessageRouter.Get", jsRequest.ToJson(), dotNetReference);
+            await JSRuntime.InvokeVoidAsync("MessageRouter.Get", jsRequest.ToJson(), dotNetReference);
         }
     }
 
