@@ -24,6 +24,7 @@ namespace ServerAppDemo
             services.AddServerSideBlazor();
             services.AddSignalR();
 
+            services.AddScoped<MatchWatcher>();
             services.AddScoped<MatchCreation>();
         }
 
