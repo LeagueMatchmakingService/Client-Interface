@@ -167,11 +167,11 @@
         StateHasChanged();
         if (match.BluePlayer.SummonerId == SummonerId)
         {
-            await mc.CreateOneOnOneGame(match.MatchId, match.RedPlayer.SummonerId);
+            await mc.CreateOneOnOneGame(match.MatchId.ToString(), match.RedPlayer.SummonerId);
         }
         else if (match.RedPlayer.SummonerId == SummonerId)
         {
-            await mc.JoinGame(match.BluePlayer.SummonerId, match.MatchId);
+            await mc.JoinGame(match.BluePlayer.SummonerId, match.MatchId.ToString());
         }
         var response = await mw.WatchMatch(match);
         result = response.Item1;
@@ -183,8 +183,10 @@
         ResultShow = true;
         MatchFoundScreen = false;
         StateHasChanged();
-        await Task.Delay(7500);
+        await Task.Delay(5000);
         ResultShow = false;
+        StateHasChanged();
+        CurrentMMR = elo;
     }
 
     TimeSpan timer = new TimeSpan();
