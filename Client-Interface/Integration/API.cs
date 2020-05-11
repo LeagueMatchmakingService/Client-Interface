@@ -12,7 +12,7 @@ namespace ServerAppDemo.Integration
 
         public static class EloConnection
         {
-            public static string SaveMatch => $"{eloUri}/CalculateMatchOutcomeOneVOne/";
+            public static string SaveMatch => $"{eloUri}/SaveMatch";
         }
 
 

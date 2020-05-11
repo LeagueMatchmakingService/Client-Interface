@@ -22,9 +22,10 @@ namespace ServerAppDemo.Models.Objects
     }
     public class MatchOutComeOneVOne
     {
-        public int PlayerOne { get; set; }
-        public int PlayerTwo { get; set; }
+        public int BluePlayer { get; set; }
+        public int RedPlayer { get; set; }
         public GameOutcome Outcome { get; set; }
+        public int RequestUser { get; set; }
     }
     public enum GameOutcome
     {

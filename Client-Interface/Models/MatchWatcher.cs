@@ -21,6 +21,7 @@ namespace ServerAppDemo.Models
         public ILeagueClient lc;
         public async Task<Tuple<bool, int>> WatchMatch(Match match)
         {
+            lc = await LeagueClient.Connect();
             var summoner = await lc.GetSummonersModule().GetCurrentSummoner();
             var result = await MatchParser(match, summoner);
             var elo = await SaveMatchResult(result, match, summoner);
@@ -54,10 +55,11 @@ namespace ServerAppDemo.Models
             }
             var uri = API.EloConnection.SaveMatch;
             var http = new HttpClient();
-            var matchOutcome = new MatchOutComeOneVOne { 
-                PlayerOne = match.BluePlayer.SummonerId,
-                PlayerTwo = match.RedPlayer.SummonerId,
-                Outcome = outcome
+            var matchOutcome = new MatchOutComeOneVOne {
+                BluePlayer = match.BluePlayer.SummonerId,
+                RedPlayer = match.RedPlayer.SummonerId,
+                Outcome = outcome,
+                RequestUser = summoner.SummonerId
             };
             var content = new StringContent(JsonConvert.SerializeObject(matchOutcome), Encoding.UTF8, "application/json");
             var response = await http.PostAsync(uri, content);
