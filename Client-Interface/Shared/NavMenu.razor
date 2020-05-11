@@ -96,21 +96,26 @@ else
 @code {
     private bool _leagueDetected = false;
 
+
     protected override async Task OnInitializedAsync()
     {
         _leagueDetected = await mc.CheckIfLeagueIsOpen();
+
     }
     protected override async void OnAfterRender(bool firstRender)
     {
         if (!_leagueDetected)
         {
             await CheckForLeagueOpen();
+            await mc.CheckIfUserExists();
         }
         else
         {
             await mc.CheckIfUserExists();
         }
     }
+
+
 
     private async Task CheckForLeagueOpen()
     {
