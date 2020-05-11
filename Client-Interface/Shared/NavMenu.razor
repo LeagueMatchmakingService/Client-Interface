@@ -106,6 +106,10 @@ else
         {
             await CheckForLeagueOpen();
         }
+        else
+        {
+            await mc.CheckIfUserExists();
+        }
     }
 
     private async Task CheckForLeagueOpen()

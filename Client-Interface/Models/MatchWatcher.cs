@@ -130,7 +130,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("gameData")]
         public GameData GameData { get; set; }
     }
-
     public partial class ActivePlayer
     {
         [JsonProperty("abilities")]
@@ -151,7 +150,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("summonerName")]
         public string SummonerName { get; set; }
     }
-
     public partial class Abilities
     {
         [JsonProperty("E")]
@@ -169,7 +167,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("W")]
         public E W { get; set; }
     }
-
     public partial class E
     {
         [JsonProperty("abilityLevel", NullValueHandling = NullValueHandling.Ignore)]
@@ -187,7 +184,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("rawDisplayName")]
         public string RawDisplayName { get; set; }
     }
-
     public partial class ChampionStats
     {
         [JsonProperty("abilityPower")]
@@ -274,7 +270,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("tenacity")]
         public long Tenacity { get; set; }
     }
-
     public partial class FullRunes
     {
         [JsonProperty("generalRunes")]
@@ -292,7 +287,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("statRunes")]
         public List<StatRune> StatRunes { get; set; }
     }
-
     public partial class Keystone
     {
         [JsonProperty("displayName")]
@@ -307,7 +301,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("rawDisplayName")]
         public string RawDisplayName { get; set; }
     }
-
     public partial class StatRune
     {
         [JsonProperty("id")]
@@ -316,7 +309,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("rawDescription")]
         public string RawDescription { get; set; }
     }
-
     public partial class AllPlayer
     {
         [JsonProperty("championName")]
@@ -367,7 +359,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("team")]
         public string Team { get; set; }
     }
-
     public partial class Item
     {
         [JsonProperty("canUse")]
@@ -397,7 +388,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("slot")]
         public long Slot { get; set; }
     }
-
     public partial class Runes
     {
         [JsonProperty("keystone")]
@@ -409,7 +399,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("secondaryRuneTree")]
         public Keystone SecondaryRuneTree { get; set; }
     }
-
     public partial class Scores
     {
         [JsonProperty("assists")]
@@ -427,7 +416,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("wardScore")]
         public long WardScore { get; set; }
     }
-
     public partial class SummonerSpells
     {
         [JsonProperty("summonerSpellOne")]
@@ -436,13 +424,11 @@ namespace ServerAppDemo.Models
         [JsonProperty("summonerSpellTwo")]
         public E SummonerSpellTwo { get; set; }
     }
-
     public partial class Events
     {
         [JsonProperty("Events")]
         public List<Event> EventsEvents { get; set; }
     }
-
     public partial class Event
     {
         [JsonProperty("EventID")]
@@ -469,7 +455,6 @@ namespace ServerAppDemo.Models
         [JsonProperty("TurretKilled", NullValueHandling = NullValueHandling.Ignore)]
         public string TurretKilled { get; set; }
     }
-
     public partial class GameData
     {
         [JsonProperty("gameMode")]

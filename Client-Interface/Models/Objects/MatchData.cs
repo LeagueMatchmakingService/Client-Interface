@@ -15,7 +15,7 @@ namespace ServerAppDemo.Models.Objects
     public class Player
     {
         public string ConnectionId { get; set; }
-        public string SummonerId { get; set; }
+        public int SummonerId { get; set; }
         public int Elo { get; set; }
         public int SearchElo { get; set; }
         public DateTime Created { get; set; }

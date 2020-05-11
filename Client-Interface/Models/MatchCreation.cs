@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ServerAppDemo.Models
@@ -40,7 +41,7 @@ namespace ServerAppDemo.Models
             user.Region = locals.RegionRegion;
         }
 
-        public async Task<string> GetSummonerId()
+        public async Task<int> GetSummonerId()
         {
             if (League == null)
             {
@@ -48,10 +49,19 @@ namespace ServerAppDemo.Models
             }
             Summoners sum = new Summoners(League);
             var player = await sum.GetCurrentSummoner();
-            return player.SummonerId.ToString();
+            return player.SummonerId;
         }
 
-        public async Task<int> GetSummonerMMR(string summonerId)
+        public async Task CheckIfUserExists()
+        {
+            Summoners sum = new Summoners(League);
+            var player = await sum.GetCurrentSummoner();
+            var http = new HttpClient();
+            var uri = "https://elorestapi.azurewebsites.net/api/Elo/PlayerExist";
+            var content = new StringContent(JsonConvert.SerializeObject(player), Encoding.UTF8, "application/json");
+            var r = await http.PostAsync(uri, content);
+        }
+        public async Task<int> GetSummonerMMR(int summonerId)
         {
             var http = new HttpClient();
             var uri = "https://elorestapi.azurewebsites.net/api/Elo/GetOneVOneElo/" + summonerId;
@@ -59,11 +69,8 @@ namespace ServerAppDemo.Models
             var elo = JsonConvert.DeserializeObject<int>(await response.Content.ReadAsStringAsync());
             return elo;
         }
-
-
-        public async Task CreateOneOnOneGame(string LobbyName, string enemyId)
+        public async Task CreateOneOnOneGame(string LobbyName, int enemyId)
         {
-            long Enemyid = long.Parse(enemyId);
             if (League == null)
             {
                 League = await LeagueClient.Connect();
@@ -89,7 +96,7 @@ namespace ServerAppDemo.Models
 
             invites.Add(new LobbyInvitation
             {
-                ToSummonerId = Enemyid
+                ToSummonerId = enemyId
             });
             await League.MakeApiRequest(HttpMethod.Post, "/lol-lobby/v2/lobby/invitations", invites);
             bool AllIn = false;
@@ -98,7 +105,7 @@ namespace ServerAppDemo.Models
                 LobbyPlayerInfo[] players = await League.MakeApiRequestAs<LobbyPlayerInfo[]>(HttpMethod.Get, "/lol-lobby/v2/lobby/members");
                 foreach (var item in players)
                 {
-                    if (item.SummonerId == Enemyid)
+                    if (item.SummonerId == enemyId)
                     {
                         AllIn = true;
                     }
@@ -106,9 +113,8 @@ namespace ServerAppDemo.Models
             }
             await League.MakeApiRequest(HttpMethod.Post, "/lol-lobby/v1/lobby/custom/start-champ-select", new StartGame());
         }
-        public async Task JoinGame(string en, string match)
+        public async Task JoinGame(int enemyId, string match)
         {
-            long enemy = long.Parse(en);
             bool matchAccepted = false;
             if (League == null)
             {
@@ -121,7 +127,7 @@ namespace ServerAppDemo.Models
 
                 foreach (var item in invites)
                 {
-                    if (item.FromSummonerId == enemy)
+                    if (item.FromSummonerId == enemyId)
                     {
                         await League.MakeApiRequest(HttpMethod.Post, "/lol-lobby/v2/received-invitations/" + item.InvitationId + "/accept");
                         System.Net.Http.HttpClient http = new System.Net.Http.HttpClient();
