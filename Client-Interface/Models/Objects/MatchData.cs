@@ -7,7 +7,7 @@ namespace ServerAppDemo.Models.Objects
 {
     public class Match
     {
-        public string MatchId { get; set; }
+        public Guid MatchId { get; set; }
         public Player RedPlayer { get; set; }
         public Player BluePlayer { get; set; }
 
@@ -22,9 +22,10 @@ namespace ServerAppDemo.Models.Objects
     }
     public class MatchOutComeOneVOne
     {
+        public Guid MatchId { get; set; }
         public int BluePlayer { get; set; }
         public int RedPlayer { get; set; }
-        public GameOutcome Outcome { get; set; }
+        public GameOutcome Winner { get; set; }
         public int RequestUser { get; set; }
     }
     public enum GameOutcome

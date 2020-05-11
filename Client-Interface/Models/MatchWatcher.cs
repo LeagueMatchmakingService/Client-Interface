@@ -31,7 +31,7 @@ namespace ServerAppDemo.Models
         private async Task<int> SaveMatchResult(bool result, Match match, SummonerProfile summoner)
         {
             GameOutcome outcome;
-            if(match.BluePlayer.SummonerId == summoner.SummonerId)
+            if (match.BluePlayer.SummonerId == summoner.SummonerId)
             {
                 if (result)
                 {
@@ -55,16 +55,18 @@ namespace ServerAppDemo.Models
             }
             var uri = API.EloConnection.SaveMatch;
             var http = new HttpClient();
-            var matchOutcome = new MatchOutComeOneVOne {
+            var matchOutcome = new MatchOutComeOneVOne
+            {
+                MatchId = match.MatchId,
                 BluePlayer = match.BluePlayer.SummonerId,
                 RedPlayer = match.RedPlayer.SummonerId,
-                Outcome = outcome,
+                Winner = outcome,
                 RequestUser = summoner.SummonerId
             };
             var content = new StringContent(JsonConvert.SerializeObject(matchOutcome), Encoding.UTF8, "application/json");
             var response = await http.PostAsync(uri, content);
             var newElo = JsonConvert.DeserializeObject<int>(await response.Content.ReadAsStringAsync());
-            return newElo;       
+            return newElo;
         }
 
         private async Task<bool> MatchParser(Match match, SummonerProfile summoner)
