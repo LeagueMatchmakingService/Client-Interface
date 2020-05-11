@@ -138,11 +138,12 @@
                 .WithUrl("https://onevonehub20200507160408.azurewebsites.net/onevone")
                 .Build();
 
-            hubConnection.On<Match>("MatchNotification", (match) =>
-            {
-                MatchFound(match);
+            hubConnection.On<Match>
+    ("MatchNotification", (match) =>
+    {
+        MatchFound(match);
 
-            });
+    });
 
             await hubConnection.StartAsync();
             await QueueForOneVOne();
@@ -167,20 +168,17 @@
         if (match.BluePlayer.SummonerId == SummonerId)
         {
             await mc.CreateOneOnOneGame(match.MatchId, match.RedPlayer.SummonerId);
-            result = await mw.MatchParser(match);
-            await MatchDone();
-
-
         }
         else if (match.RedPlayer.SummonerId == SummonerId)
         {
             await mc.JoinGame(match.BluePlayer.SummonerId, match.MatchId);
-            result = await mw.MatchParser(match);
-            await MatchDone();
         }
+        var response = await mw.WatchMatch(match);
+        result = response.Item1;
+        await MatchDone(response.Item2);
     }
 
-    private async Task MatchDone()
+    private async Task MatchDone(int elo)
     {
         ResultShow = true;
         MatchFoundScreen = false;

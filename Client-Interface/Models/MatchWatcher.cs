@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ServerAppDemo.Integration;
 using ServerAppDemo.Models.Objects;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Authentication;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,10 +19,54 @@ namespace ServerAppDemo.Models
         HttpClient http;
         public bool IsInGame = true;
         public ILeagueClient lc;
-        public async Task<bool> MatchParser(Match match)
+        public async Task<Tuple<bool, int>> WatchMatch(Match match)
         {
-            lc = await LeagueClient.Connect();
             var summoner = await lc.GetSummonersModule().GetCurrentSummoner();
+            var result = await MatchParser(match, summoner);
+            var elo = await SaveMatchResult(result, match, summoner);
+            return new Tuple<bool, int>(result, elo);
+        }
+
+        private async Task<int> SaveMatchResult(bool result, Match match, SummonerProfile summoner)
+        {
+            GameOutcome outcome;
+            if(match.BluePlayer.SummonerId == summoner.SummonerId)
+            {
+                if (result)
+                {
+                    outcome = GameOutcome.BluePlayer;
+                }
+                else
+                {
+                    outcome = GameOutcome.RedPlayer;
+                }
+            }
+            else
+            {
+                if (result)
+                {
+                    outcome = GameOutcome.RedPlayer;
+                }
+                else
+                {
+                    outcome = GameOutcome.BluePlayer;
+                }
+            }
+            var uri = API.EloConnection.SaveMatch;
+            var http = new HttpClient();
+            var matchOutcome = new MatchOutComeOneVOne { 
+                PlayerOne = match.BluePlayer.SummonerId,
+                PlayerTwo = match.RedPlayer.SummonerId,
+                Outcome = outcome
+            };
+            var content = new StringContent(JsonConvert.SerializeObject(matchOutcome), Encoding.UTF8, "application/json");
+            var response = await http.PostAsync(uri, content);
+            var newElo = JsonConvert.DeserializeObject<int>(await response.Content.ReadAsStringAsync());
+            return newElo;       
+        }
+
+        private async Task<bool> MatchParser(Match match, SummonerProfile summoner)
+        {
             while (IsInGame)
             {
                 using (var httpClientHandler = new HttpClientHandler())
@@ -64,7 +110,6 @@ namespace ServerAppDemo.Models
                                 {
                                     return false;
                                 }
-
                             }
                         }
                         foreach (var item in jsonmodel.AllPlayers)

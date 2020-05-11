@@ -20,5 +20,16 @@ namespace ServerAppDemo.Models.Objects
         public int SearchElo { get; set; }
         public DateTime Created { get; set; }
     }
+    public class MatchOutComeOneVOne
+    {
+        public int PlayerOne { get; set; }
+        public int PlayerTwo { get; set; }
+        public GameOutcome Outcome { get; set; }
+    }
+    public enum GameOutcome
+    {
+        BluePlayer = 1,
+        RedPlayer = 0
+    }
 }
 
