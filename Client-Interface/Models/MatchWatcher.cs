@@ -17,10 +17,11 @@ namespace ServerAppDemo.Models
     public class MatchWatcher
     {
         HttpClient http;
-        public bool IsInGame = true;
+        public bool IsInGame;
         public ILeagueClient lc;
         public async Task<Tuple<bool, int>> WatchMatch(Match match)
         {
+            IsInGame = true;
             lc = await LeagueClient.Connect();
             var summoner = await lc.GetSummonersModule().GetCurrentSummoner();
             var result = await MatchParser(match, summoner);
@@ -105,8 +106,8 @@ namespace ServerAppDemo.Models
                                 IsInGame = false;
                                 KillLeague();
                                 if (item.KillerName == summoner.DisplayName ||
-                                    (item.KillerName.Contains("T100") && Convert.ToInt32(match.BluePlayer.SummonerId) == summoner.SummonerId) ||
-                                    (item.KillerName.Contains("T200") && Convert.ToInt32(match.RedPlayer.SummonerId) == summoner.SummonerId))
+                                    (item.KillerName.Contains("T100") && match.BluePlayer.SummonerId == summoner.SummonerId) ||
+                                    (item.KillerName.Contains("T200") && match.RedPlayer.SummonerId == summoner.SummonerId))
                                 {
                                     return true;
                                 }

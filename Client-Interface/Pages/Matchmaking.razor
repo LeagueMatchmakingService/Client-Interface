@@ -40,7 +40,7 @@
                         <h2>@CurrentMMR </h2>
                         <h3>@NewMMR</h3>
                     </div>
-                   <div class="arrow-down"></div>
+                    <div class="arrow-down"></div>
                 </div>
             }
         </div>
@@ -113,7 +113,7 @@
     private bool MatchFoundScreen { get; set; }
     public string textMatchFound { get; set; }
     public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
-    private int? SummonerId { get; set; }
+    private string SummonerId { get; set; }
     private bool TryingToJoinQueue = false;
     private int NewMMR { get; set; }
     private static int? CurrentMMR { get; set; }
@@ -129,14 +129,14 @@
 
     protected override async void OnAfterRender(bool firstRender)
     {
-        inQueue = false;
-        ResultShow = false;
         if (firstRender)
         {
             MatchFoundScreen = false;
+            inQueue = false;
+            ResultShow = false;
             StateHasChanged();
         }
-        if (SummonerId != null && CurrentMMR == null)
+        if (string.IsNullOrWhiteSpace(SummonerId) && CurrentMMR == null)
         {
             CurrentMMR = await mc.GetSummonerMMR(Convert.ToInt32(SummonerId));
             StateHasChanged();
@@ -162,6 +162,7 @@
             await hubConnection.StartAsync();
             await QueueForOneVOne();
             inQueue = true;
+            TryingToJoinQueue = false;
             await StartTimer();
 
 

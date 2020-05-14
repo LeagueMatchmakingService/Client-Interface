@@ -315,7 +315,7 @@ namespace ServerAppDemo.Models.Objects
         public string Timestamp { get; set; }
 
         [JsonProperty("toSummonerId")]
-        public long ToSummonerId { get; set; }
+        public string ToSummonerId { get; set; }
 
         [JsonProperty("toSummonerName")]
         public string ToSummonerName { get; set; }
@@ -412,7 +412,7 @@ namespace ServerAppDemo.Models.Objects
         public long SummonerIconId { get; set; }
 
         [JsonProperty("summonerId")]
-        public long SummonerId { get; set; }
+        public string SummonerId { get; set; }
 
         [JsonProperty("summonerInternalName")]
         public string SummonerInternalName { get; set; }
@@ -433,7 +433,7 @@ namespace ServerAppDemo.Models.Objects
         public bool CanAcceptInvitation { get; set; }
 
         [JsonProperty("fromSummonerId")]
-        public long FromSummonerId { get; set; }
+        public string FromSummonerId { get; set; }
 
         [JsonProperty("fromSummonerName")]
         public string FromSummonerName { get; set; }

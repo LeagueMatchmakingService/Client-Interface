@@ -41,7 +41,7 @@ namespace ServerAppDemo.Models
             user.Region = locals.RegionRegion;
         }
 
-        public async Task<int> GetSummonerId()
+        public async Task<string> GetSummonerId()
         {
             if (League == null)
             {
@@ -61,7 +61,7 @@ namespace ServerAppDemo.Models
             var content = new StringContent(JsonConvert.SerializeObject(player), Encoding.UTF8, "application/json");
             var r = await http.PostAsync(uri, content);
         }
-        public async Task<int> GetSummonerMMR(int summonerId)
+        public async Task<int> GetSummonerMMR(long summonerId)
         {
             var http = new HttpClient();
             var uri = "https://elorestapi.azurewebsites.net/api/Elo/GetOneVOneElo/" + summonerId;
@@ -69,7 +69,7 @@ namespace ServerAppDemo.Models
             var elo = JsonConvert.DeserializeObject<int>(await response.Content.ReadAsStringAsync());
             return elo;
         }
-        public async Task CreateOneOnOneGame(string LobbyName, int enemyId)
+        public async Task CreateOneOnOneGame(string LobbyName, string enemyId)
         {
             if (League == null)
             {
@@ -113,7 +113,7 @@ namespace ServerAppDemo.Models
             }
             await League.MakeApiRequest(HttpMethod.Post, "/lol-lobby/v1/lobby/custom/start-champ-select", new StartGame());
         }
-        public async Task JoinGame(int enemyId, string match)
+        public async Task JoinGame(string enemyId, string match)
         {
             bool matchAccepted = false;
             if (League == null)
@@ -127,7 +127,7 @@ namespace ServerAppDemo.Models
 
                 foreach (var item in invites)
                 {
-                    if (item.FromSummonerId == enemyId)
+                    if (item.FromSummonerId == enemyId && item.State == "Pending")
                     {
                         await League.MakeApiRequest(HttpMethod.Post, "/lol-lobby/v2/received-invitations/" + item.InvitationId + "/accept");
                         System.Net.Http.HttpClient http = new System.Net.Http.HttpClient();

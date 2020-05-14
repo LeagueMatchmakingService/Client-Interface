@@ -15,7 +15,7 @@ namespace ServerAppDemo.Models.Objects
     public class Player
     {
         public string ConnectionId { get; set; }
-        public int SummonerId { get; set; }
+        public string SummonerId { get; set; }
         public int Elo { get; set; }
         public int SearchElo { get; set; }
         public DateTime Created { get; set; }
@@ -23,10 +23,10 @@ namespace ServerAppDemo.Models.Objects
     public class MatchOutComeOneVOne
     {
         public Guid MatchId { get; set; }
-        public int BluePlayer { get; set; }
-        public int RedPlayer { get; set; }
+        public string BluePlayer { get; set; }
+        public string RedPlayer { get; set; }
         public GameOutcome Winner { get; set; }
-        public int RequestUser { get; set; }
+        public string RequestUser { get; set; }
     }
     public enum GameOutcome
     {

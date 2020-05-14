@@ -33,7 +33,7 @@ namespace ServerAppDemo.Models.Objects
         public RerollPointsData RerollPoints { get; set; }
 
         [JsonProperty("summonerId")]
-        public int SummonerId { get; set; }
+        public string SummonerId { get; set; }
 
         [JsonProperty("summonerLevel")]
         public int SummonerLevel { get; set; }

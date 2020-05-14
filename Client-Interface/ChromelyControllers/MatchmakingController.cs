@@ -35,7 +35,7 @@ namespace ServerAppDemo.ChromelyControllers
             user.Region = locals.RegionRegion;
         }
 
-        public async void CreateOneOnOneGame(string LobbyName, long Enemyid)
+        public async void CreateOneOnOneGame(string LobbyName, string Enemyid)
         {
             ILeagueClient league = await LeagueClient.Connect();
             ApiObject api = new ApiObject();
@@ -77,7 +77,7 @@ namespace ServerAppDemo.ChromelyControllers
             await league.MakeApiRequest(HttpMethod.Post, "/lol-lobby/v1/lobby/custom/start-champ-select", new StartGame());
         }
 
-        public async void JoinGame(long enemy, string match)
+        public async void JoinGame(string enemy, Match match)
         {
             bool matchAccepted = false;
             ILeagueClient league = await LeagueClient.Connect();
