@@ -50,8 +50,8 @@ namespace ServerAppDemo
                 var core = typeof(IChromelyConfiguration).Assembly;
                 var config = DefaultConfiguration.CreateForRuntimePlatform();
                 config.WindowOptions.Title = "League of legends Matchmaking Service";
-                config.StartUrl = $"https://127.0.0.1:{port}";
-                config.DebuggingMode = true;
+                config.StartUrl = $"http://127.0.0.1:{port}";
+                config.DebuggingMode = false;
                 config.WindowOptions.RelativePathToIconFile = "chromely.ico";
 
                 try
@@ -76,7 +76,7 @@ namespace ServerAppDemo
                 {
                     webBuilder
                     .UseStartup<Startup>()
-                    .UseUrls(new[] { $"https://127.0.0.1:{port}" });
+                    .UseUrls(new[] { $"http://127.0.0.1:{port}" });
                 });
     }
 
