@@ -136,9 +136,9 @@
             ResultShow = false;
             StateHasChanged();
         }
-        if (string.IsNullOrWhiteSpace(SummonerId) && CurrentMMR == null)
+        if (!string.IsNullOrWhiteSpace(SummonerId) && CurrentMMR == null)
         {
-            CurrentMMR = await mc.GetSummonerMMR(Convert.ToInt32(SummonerId));
+            CurrentMMR = await mc.GetSummonerMMR(SummonerId);
             StateHasChanged();
         }
     }

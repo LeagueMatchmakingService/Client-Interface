@@ -61,7 +61,7 @@ namespace ServerAppDemo.Models
             var content = new StringContent(JsonConvert.SerializeObject(player), Encoding.UTF8, "application/json");
             var r = await http.PostAsync(uri, content);
         }
-        public async Task<int> GetSummonerMMR(long summonerId)
+        public async Task<int> GetSummonerMMR(string summonerId)
         {
             var http = new HttpClient();
             var uri = "https://elorestapi.azurewebsites.net/api/Elo/GetOneVOneElo/" + summonerId;
