@@ -1,54 +1,6 @@
-/*========	Table of Css Content ==========*/
-/* Typography */
-/* Normalize  */
-/* Global style */
-/* Breadcrumb Area Start */
-/* Header Area Start */
-/* Footer Area Start */
-/* Hero Area Start */
-/* Features Area Start */
-/* Featured Game Area Start */
-/* Whay Choose us Area Start */
-/* activities Area Start */
-/* Fun fact Area Start */
-/* Get Start Area Start */
-/*  Recent Winners Area Start */
-/*	Index 2 Css Start */
-/* About Area Start */
-/* About page section Area Start */
-/* Our Vision Area Start */
-/* Team Area Start */
-/* community and Blog Area Start */
-/* Play Games Area Start */
-/* Lottery Staticstics Area Start */
-/*  How it Work Area Start  */
-/* lottery video Area Start */
-/* Questions Area Start */
-/* Cart Area Start */
-/* Payment-method Area Start */
-/* Tournaments Area Start */
-/* Bonuses Area Start */
-/*Deposit Bonuses Area Start */
-/* Bonus banner Area Start */
-/* Awards Area Start */
-/*  How Play Area Start */
-/*  Affiliate Process area Start */
-/* Features Area Start */
-/* Ref Commission Area Start  */
-/* Marketing Tools Area Start */
-/*Testimonial Area CSS Start*/
-/* Serch Area Start */
-/* Help Section Area Start */
-/* Contact Area Start */
-/* 404 Area Start */
-/* faq-section css start */
-/* login modal Area Start */
-/* =========================
-=============================
- */
-/* Typography */
+
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Ubuntu:300,400,500,700");
-/* Normalize  */
+
 html {
     font-family: "Open Sans", sans-serif;
     -webkit-text-size-adjust: 100%;
@@ -1508,9 +1460,9 @@ section {
     transition: 0.2s all;
 }
 
-.queue-btn audio{
-    display:none;
-}
+    .queue-btn audio {
+        display: none;
+    }
 
     .queue-btn h4 {
         line-height: 50px;
@@ -1542,21 +1494,23 @@ section {
         background-color: rgba(255,255,255,1) !important;
     }
 
-    .match-found-text{
-        width:100%;
-        height:100%;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-    }
-    .match-found-text h2{
-        font-size:92px;
+.match-found-text {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .match-found-text h2 {
+        font-size: 92px;
     }
 
 .endOfGameImage {
     padding-top: 100px;
     height: 100%;
 }
+
 .loading-btn {
     width: 100%;
     display: flex;
@@ -1768,5 +1722,158 @@ section {
     40% {
         -webkit-transform: scale(1);
         transform: scale(1);
+    }
+}
+
+.match-result-screen {
+    width: 100%;
+    height: 500px;
+    padding-top: 150px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+    .match-result-screen h1 {
+        font-size: 140px;
+        font-weight: 700;
+    }
+
+.mmr-change {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.mmr-text {
+    position: relative;
+    margin-right: 15px;
+    overflow: hidden;
+    height: 65px;
+    width: 122px;
+}
+
+    .mmr-text h2 {
+        top: 65px;
+        left: 0;
+        position: absolute;
+        -moz-animation: fadedown 1.5s;
+        -o-animation: fadedown 1.5s;
+        -webkit-animation: fadedown1.5s;
+        animation: fadedown 1.5s;
+        font-size: 52px;
+        line-height: 1.4;
+    }
+    .mmr-text h3 {
+        top: 0px;
+        left: 0;
+        position: absolute;
+        -moz-animation: fadeindown 0.5s ease-in;
+        -o-animation: fadeindown 0.5s ease-in;
+        -webkit-animation: fadeindown 0.5s ease-in;
+        animation: fadeindown s ease-in;
+        font-size: 52px;
+        line-height: 1.4;
+    }
+    .mmr-text h4 {
+        top: -65px;
+        left: 0;
+        position: absolute;
+        -moz-animation: fadeup 1.5s;
+        -o-animation: fadeup 1.5s;
+        -webkit-animation: fadeup 1.5s;
+        animation: fadeup 1.5s;
+        font-size: 52px;
+        line-height: 1.4;
+    }
+    .mmr-text h5 {
+        top: 0px;
+        left: 0;
+        position: absolute;
+        -moz-animation: fadeinup 0.5s ease-in;
+        -o-animation: fadeinup 0.5s ease-in;
+        -webkit-animation: fadeinup 0.5s ease-in;
+        animation: fadeinup 0.5s ease-in;
+        font-size: 52px;
+        line-height: 1.4;
+    }
+
+.arrow-up {
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid green;
+    -moz-animation: 0.8s infinite jumpUp ease-in-out;
+    -o-animation: 0.8s infinite jumpUp ease-in-out;
+    -webkit-animation: 0.8s infinite jumpUp ease-in-out;
+    animation: 0.8s infinite jumpUp ease-in-out;
+}
+
+.arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid red;
+    -moz-animation: 0.8s infinite jumpUp ease-in-out;
+    -o-animation: 0.8s infinite jumpUp ease-in-out;
+    -webkit-animation: 0.8s infinite jumpUp ease-in-out;
+    animation: 0.8s infinite jumpUp ease-in-out;
+}
+
+@keyframes jumpUp {
+    0% {
+        transform: translateY(0%)
+    }
+
+    50% {
+        transform: translateY(50%)
+    }
+
+    100% {
+        transform: translateY(0%)
+    }
+}
+
+@keyframes fadedown{
+    from{top:0px; opacity: 1;}
+    to{top:65px; opacity: 0}
+}
+@keyframes fadeindown {
+    from {
+        top: -65px;
+        opacity: 0;
+    }
+
+    to {
+        top: 0px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeup {
+    from {
+        top: 0px;
+        opacity: 1;
+    }
+
+    to {
+        top: -65px;
+        opacity: 0
+    }
+}
+
+@keyframes fadeinup {
+    from {
+        top: 65px;
+        opacity: 0;
+    }
+
+    to {
+        top: 0px;
+        opacity: 1;
     }
 }

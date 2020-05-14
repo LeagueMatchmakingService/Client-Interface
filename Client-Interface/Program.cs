@@ -51,7 +51,7 @@ namespace ServerAppDemo
                 var config = DefaultConfiguration.CreateForRuntimePlatform();
                 config.WindowOptions.Title = "League of legends Matchmaking Service";
                 config.StartUrl = $"http://127.0.0.1:{port}";
-                config.DebuggingMode = false;
+                config.DebuggingMode = true;
                 config.WindowOptions.RelativePathToIconFile = "chromely.ico";
 
                 try
@@ -85,8 +85,6 @@ namespace ServerAppDemo
         public override void Configure(IChromelyContainer container)
         {
             base.Configure(container);
-            container.RegisterSingleton(typeof(ChromelyController), Guid.NewGuid().ToString(), typeof(DemoController));
-            container.RegisterSingleton(typeof(ChromelyController), Guid.NewGuid().ToString(), typeof(ExecuteJavaScriptDemoController));
             container.RegisterSingleton(typeof(ChromelyController), Guid.NewGuid().ToString(), typeof(MatchmakingController));
         }
     }
