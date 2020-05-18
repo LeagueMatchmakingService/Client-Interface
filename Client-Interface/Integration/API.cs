@@ -15,6 +15,9 @@ namespace ServerAppDemo.Integration
             public static string SaveMatch => $"{eloUri}/SaveMatch";
         }
 
-
+        public static class Leaderboard
+        {
+            public static string GetLeaderboard => $"https://leaderboardhub.azurewebsites.net/leaderboard/50";
+        }
     }
 }

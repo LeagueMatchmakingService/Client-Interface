@@ -12,7 +12,6 @@
   <ItemGroup>
     <Content Include="Models\ILeagueClient.cs" />
     <Content Include="Models\LeagueClient.cs" />
-    <Content Include="Models\MatchResult.cs" />
   </ItemGroup>
 
   <ItemGroup>

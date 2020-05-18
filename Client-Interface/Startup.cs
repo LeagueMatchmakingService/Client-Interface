@@ -27,6 +27,7 @@ namespace ServerAppDemo
 
             services.AddScoped<MatchWatcher>();
             services.AddScoped<MatchCreation>();
+            services.AddScoped<RetrieveInformation>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
