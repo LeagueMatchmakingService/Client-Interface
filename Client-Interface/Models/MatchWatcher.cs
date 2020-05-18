@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
 using ServerAppDemo.Integration;
 using ServerAppDemo.Models.Objects;
 using System;
@@ -19,11 +21,16 @@ namespace ServerAppDemo.Models
         HttpClient http;
         public bool IsInGame;
         public ILeagueClient lc;
+        private static string RedChamp;
+        private static string BlueChamp;
         public async Task<Tuple<bool, int>> WatchMatch(Match match)
         {
+            RedChamp = "";
+            BlueChamp = "";
             IsInGame = true;
             lc = await LeagueClient.Connect();
             var summoner = await lc.GetSummonersModule().GetCurrentSummoner();
+
             var result = await MatchParser(match, summoner);
             var elo = await SaveMatchResult(result, match, summoner);
             return new Tuple<bool, int>(result, elo);
@@ -56,13 +63,15 @@ namespace ServerAppDemo.Models
             }
             var uri = API.EloConnection.SaveMatch;
             var http = new HttpClient();
-            var matchOutcome = new MatchOutComeOneVOne
+            var matchOutcome = new MatchResult
             {
                 MatchId = match.MatchId,
                 BluePlayer = match.BluePlayer.SummonerId,
                 RedPlayer = match.RedPlayer.SummonerId,
                 Winner = outcome,
-                RequestUser = summoner.SummonerId
+                RequestUser = summoner.SummonerId,
+                RedChamp = RedChamp,
+                BlueChamp = BlueChamp
             };
             var content = new StringContent(JsonConvert.SerializeObject(matchOutcome), Encoding.UTF8, "application/json");
             var response = await http.PostAsync(uri, content);
@@ -72,6 +81,7 @@ namespace ServerAppDemo.Models
 
         private async Task<bool> MatchParser(Match match, SummonerProfile summoner)
         {
+          
             while (IsInGame)
             {
                 using (var httpClientHandler = new HttpClientHandler())
@@ -89,6 +99,22 @@ namespace ServerAppDemo.Models
                     {
                         var gamedata = await http.GetStringAsync("https://localhost:2999/liveclientdata/allgamedata");
                         var jsonmodel = JsonConvert.DeserializeObject<MatchOneVOneModel>(gamedata);
+
+                        if(string.IsNullOrWhiteSpace(RedChamp) || string.IsNullOrWhiteSpace(BlueChamp))
+                        {
+                            var currentPlayer = jsonmodel.AllPlayers.FirstOrDefault(x => x.SummonerName == summoner.DisplayName);
+                            var opponent = jsonmodel.AllPlayers.FirstOrDefault(x => x.SummonerName != summoner.DisplayName);
+                            if(match.BluePlayer.SummonerId == summoner.SummonerId)
+                            {
+                                BlueChamp = currentPlayer.ChampionName;
+                                RedChamp = opponent.ChampionName;
+                            }
+                            else
+                            {
+                                RedChamp = currentPlayer.ChampionName;
+                                BlueChamp = opponent.ChampionName;
+                            }
+                        }
 
                         foreach (var item in jsonmodel.Events.EventsEvents)
                         {
