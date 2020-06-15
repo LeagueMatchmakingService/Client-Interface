@@ -165,7 +165,7 @@ namespace ServerAppDemo.Models
             }
             return false;
         }
-        private void KillLeague()
+        public void KillLeague()
         {
             Process[] procs = null;
 

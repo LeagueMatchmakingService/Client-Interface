@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServerAppDemo.Models;
+using System;
 
 namespace ServerAppDemo
 {
@@ -21,6 +22,8 @@ namespace ServerAppDemo
         public void ConfigureServices(IServiceCollection services)
         {
 
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(Application_Exit);
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSignalR();
@@ -28,6 +31,12 @@ namespace ServerAppDemo
             services.AddScoped<MatchWatcher>();
             services.AddScoped<MatchCreation>();
             services.AddScoped<RetrieveInformation>();
+        }
+
+        private void Application_Exit(object sender, EventArgs e)
+        {
+            MatchWatcher mw = new MatchWatcher();
+            mw.KillLeague();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
