@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Authentication;
@@ -25,15 +26,58 @@ namespace ServerAppDemo.Models
         private static string BlueChamp;
         public async Task<Tuple<bool, int>> WatchMatch(Match match)
         {
+            if (lc == null)
+            {
+                lc = await LeagueClient.Connect();
+            }
             RedChamp = "";
             BlueChamp = "";
             IsInGame = true;
-            lc = await LeagueClient.Connect();
             var summoner = await lc.GetSummonersModule().GetCurrentSummoner();
 
-            var result = await MatchParser(match, summoner);
+            var dodged = await CheckForDodge();
+            bool result;
+            if (dodged.Item1)
+            {
+                result = dodged.Item2;
+            }
+            else
+            {
+                result = await MatchParser(match, summoner);
+            }
+ 
             var elo = await SaveMatchResult(result, match, summoner);
             return new Tuple<bool, int>(result, elo);
+        }
+
+        private async Task<Tuple<bool, bool>> CheckForDodge()
+        {
+            await Task.Delay(4000);
+            while (true)
+            {
+                var isInLobby = await lc.MakeApiRequest(HttpMethod.Get, "/lol-champ-select/v1/session");
+                if(isInLobby.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var info = JsonConvert.DeserializeObject<InGameModel>(await isInLobby.Content.ReadAsStringAsync());
+                    if(info.Timer.Phase == "GAME_STARTING")
+                    {
+                        return new Tuple<bool, bool>(false, false);
+                    }
+                }
+                else
+                {
+                    var lobbyInfo = await lc.MakeApiRequest(HttpMethod.Get, "/lol-lobby/v2/lobby");
+                    if(lobbyInfo.StatusCode == HttpStatusCode.OK)
+                    {
+                        return new Tuple<bool, bool>(true, true);
+                    }
+                    else
+                    {
+                        return new Tuple<bool, bool>(true, false);
+                    }
+                }          
+            }
+
         }
 
         private async Task<int> SaveMatchResult(bool result, Match match, SummonerProfile summoner)
@@ -160,7 +204,7 @@ namespace ServerAppDemo.Models
                     {
                         Thread.Sleep(8000);
                     }
-                    Thread.Sleep(2000);
+                    Thread.Sleep(50);
                 }
             }
             return false;

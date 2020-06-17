@@ -50,34 +50,42 @@
         <div class="queues">
             <div class="queue-box">
                 <div class="queue-btn">
-                    @if (inQueue)
+                    @if (OneVOneQueueDisabled)
                     {
-                        <h4>@timer</h4>
+                        <button>Queue disabled</button>
                     }
                     else
                     {
-                        @if (TryingToJoinQueue)
+
+                        @if (inQueue)
                         {
-                            <div class="loading-btn">
-                                <div class="sk-circle">
-                                    <div class="sk-circle1 sk-child"></div>
-                                    <div class="sk-circle2 sk-child"></div>
-                                    <div class="sk-circle3 sk-child"></div>
-                                    <div class="sk-circle4 sk-child"></div>
-                                    <div class="sk-circle5 sk-child"></div>
-                                    <div class="sk-circle6 sk-child"></div>
-                                    <div class="sk-circle7 sk-child"></div>
-                                    <div class="sk-circle8 sk-child"></div>
-                                    <div class="sk-circle9 sk-child"></div>
-                                    <div class="sk-circle10 sk-child"></div>
-                                    <div class="sk-circle11 sk-child"></div>
-                                    <div class="sk-circle12 sk-child"></div>
-                                </div>
-                            </div>
+                            <h4>@timer</h4>
                         }
                         else
                         {
-                            <button @onclick="JoinOneVOneQueue">Queue up</button>
+                            @if (TryingToJoinQueue)
+                            {
+                                <div class="loading-btn">
+                                    <div class="sk-circle">
+                                        <div class="sk-circle1 sk-child"></div>
+                                        <div class="sk-circle2 sk-child"></div>
+                                        <div class="sk-circle3 sk-child"></div>
+                                        <div class="sk-circle4 sk-child"></div>
+                                        <div class="sk-circle5 sk-child"></div>
+                                        <div class="sk-circle6 sk-child"></div>
+                                        <div class="sk-circle7 sk-child"></div>
+                                        <div class="sk-circle8 sk-child"></div>
+                                        <div class="sk-circle9 sk-child"></div>
+                                        <div class="sk-circle10 sk-child"></div>
+                                        <div class="sk-circle11 sk-child"></div>
+                                        <div class="sk-circle12 sk-child"></div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <button @onclick="JoinOneVOneQueue">Queue up</button>
+                            }
                         }
                     }
                 </div>
@@ -121,12 +129,13 @@
     private bool ResultShow { get; set; }
     private Region region { get; set; }
     private string url { get; set; }
+    private bool OneVOneQueueDisabled { get; set; }
     Task QueueForOneVOne() => hubConnection.SendAsync("JoinMatchmaking", SummonerId);
 
     protected override async Task OnInitializedAsync()
     {
         var response = await mc.GetSummoner();
-        if(response != null)
+        if (response != null)
         {
             SummonerId = response.SummonerID;
             switch (response.Region)
@@ -147,6 +156,7 @@
     {
         if (firstRender)
         {
+            OneVOneQueueDisabled = false;
             MatchFoundScreen = false;
             inQueue = false;
             ResultShow = false;
@@ -185,7 +195,7 @@
         }
         catch (Exception e)
         {
-            Console.Write(e.Message);
+            OneVOneQueueDisabled = true;
         }
     }
 
