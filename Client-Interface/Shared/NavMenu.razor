@@ -100,6 +100,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         _leagueDetected = await mc.CheckIfLeagueIsOpen();
+        mc.CheckIfLeagueOpens += LeagueClientClosed;
 
     }
     protected override async void OnAfterRender(bool firstRender)
@@ -108,6 +109,7 @@ else
         {
             await CheckForLeagueOpen();
             await mc.CheckIfUserExists();
+
         }
         else
         {
@@ -115,7 +117,11 @@ else
         }
     }
 
-
+    private async void LeagueClientClosed()
+    {
+        _leagueDetected = false;
+        await InvokeAsync(() => StateHasChanged());
+    }
 
     private async Task CheckForLeagueOpen()
     {

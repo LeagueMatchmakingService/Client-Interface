@@ -9,7 +9,7 @@ namespace ServerAppDemo.Models.Objects
     {
         public string SummonerID { get; set; }
         public string SummonerName { get; set; }
-        public string Region { get; set; }
+        public Regions Region { get; set; }
         public string Role { get; set; }
         public int Elo { get; set; }
         public DateTime QueueTime { get; set; }

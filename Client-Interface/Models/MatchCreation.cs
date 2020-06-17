@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,12 +13,18 @@ namespace ServerAppDemo.Models
     public class MatchCreation
     {
         public ILeagueClient League;
+        public delegate void LeagueClientClosed();
+        public event LeagueClientClosed CheckIfLeagueOpens;
 
         public async Task<bool> CheckIfLeagueIsOpen()
         {
             try
             {
                 League = await LeagueClient.Connect();
+                if(League != null)
+                {
+                    League.LeagueClosed += () => CheckIfLeagueOpens.Invoke();
+                }
             }
             catch (Exception e)
             {
@@ -26,36 +33,45 @@ namespace ServerAppDemo.Models
             return true;
         }
 
-        public async Task LogIn()
-        {
-            League = await LeagueClient.Connect();
-            var region = await League.MakeApiRequest(HttpMethod.Get, "/riotclient/region-locale");
-            var locals = JsonConvert.DeserializeObject<Region>(region.Content.ReadAsStringAsync().Result);
-
-            Summoners sum = new Summoners(League);
-            var player = await sum.GetCurrentSummoner();
-
-            Summoner user = new Summoner();
-            user.SummonerID = player.SummonerId.ToString();
-            user.SummonerName = player.DisplayName;
-            user.Region = locals.RegionRegion;
-        }
-
-        public async Task<string> GetSummonerId()
+        public async Task<Summoner> GetSummoner()
         {
             if (League == null)
             {
                 League = await LeagueClient.Connect();
             }
-            Summoners sum = new Summoners(League);
-            var player = await sum.GetCurrentSummoner();
-            return player.SummonerId;
+            try
+            {
+                var region = await League.MakeApiRequest(HttpMethod.Get, "/riotclient/get_region_locale");
+                var locals = JsonConvert.DeserializeObject<Region>(region.Content.ReadAsStringAsync().Result);
+
+                Summoners sum = new Summoners(League);
+                var player = await sum.GetCurrentSummoner();
+                if(player == null || player.SummonerId == null)
+                {
+                    return null;
+                }
+
+                Summoner user = new Summoner();
+                user.SummonerID = player.SummonerId.ToString();
+                user.SummonerName = player.DisplayName;
+                user.Region = (Regions)Enum.Parse(typeof(Regions), locals.RegionRegion);
+                return user;
+            }
+
+            catch
+            {
+                return null;
+            }
+       
         }
 
         public async Task CheckIfUserExists()
         {
-            Summoners sum = new Summoners(League);
-            var player = await sum.GetCurrentSummoner();
+            var player = await GetSummoner();
+            if(player == null)
+            {
+                return;
+            }
             var http = new HttpClient();
             var uri = "https://elorestapi.azurewebsites.net/api/Elo/PlayerExist";
             var content = new StringContent(JsonConvert.SerializeObject(player), Encoding.UTF8, "application/json");

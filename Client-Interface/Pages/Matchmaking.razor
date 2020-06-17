@@ -119,12 +119,28 @@
     private static int? CurrentMMR { get; set; }
     private bool result { get; set; }
     private bool ResultShow { get; set; }
+    private Region region { get; set; }
+    private string url { get; set; }
     Task QueueForOneVOne() => hubConnection.SendAsync("JoinMatchmaking", SummonerId);
 
     protected override async Task OnInitializedAsync()
     {
-        SummonerId = await mc.GetSummonerId();
+        var response = await mc.GetSummoner();
+        if(response != null)
+        {
+            SummonerId = response.SummonerID;
+            switch (response.Region)
+            {
+                case Regions.EUW:
+                    url = "https://onevonematchmaking.azurewebsites.net/onevone";
+                    break;
+                case Regions.NA:
+                    url = "https://onevonematchmaking.azurewebsites.net/onevone";
+                    break;
 
+
+            }
+        }
     }
 
     protected override async void OnAfterRender(bool firstRender)
@@ -149,7 +165,7 @@
         try
         {
             hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://onevonematchmaking.azurewebsites.net//onevone")
+                .WithUrl(url)
                 .Build();
 
             hubConnection.On<Match>

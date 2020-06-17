@@ -51,7 +51,7 @@ namespace ServerAppDemo
                 var config = DefaultConfiguration.CreateForRuntimePlatform();
                 config.WindowOptions.Title = "League of legends Matchmaking Service";
                 config.StartUrl = $"http://127.0.0.1:{port}";
-                config.DebuggingMode = true;
+                config.DebuggingMode = false;
                 config.WindowOptions.RelativePathToIconFile = "chromely.ico";
 
                 try

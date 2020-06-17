@@ -20,4 +20,19 @@ namespace ServerAppDemo.Models.Objects
         [JsonProperty("webRegion")]
         public string WebRegion { get; set; }
     }
+
+    public enum Regions
+    {
+        EUW,
+        NA,
+        EUNE,
+        TR,
+        RU,
+        KR,
+        CN,
+        OCE,
+        LAS,
+        LAN,
+        JP
+    }
 }

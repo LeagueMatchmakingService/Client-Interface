@@ -20,21 +20,6 @@ namespace ServerAppDemo.ChromelyControllers
         {
         }
 
-        public async Task LogIn()
-        {
-            League = await LeagueClient.Connect();
-            var region = await League.MakeApiRequest(HttpMethod.Get, "/riotclient/region-locale");
-            var locals = JsonConvert.DeserializeObject<Region>(region.Content.ReadAsStringAsync().Result);
-
-            Summoners sum = new Summoners(League);
-            var player = await sum.GetCurrentSummoner();
-
-            Summoner user = new Summoner();
-            user.SummonerID = player.SummonerId.ToString();
-            user.SummonerName = player.DisplayName;
-            user.Region = locals.RegionRegion;
-        }
-
         public async void CreateOneOnOneGame(string LobbyName, string Enemyid)
         {
             ILeagueClient league = await LeagueClient.Connect();

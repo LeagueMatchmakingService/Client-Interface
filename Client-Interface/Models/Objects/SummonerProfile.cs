@@ -9,7 +9,7 @@ namespace ServerAppDemo.Models.Objects
     public class SummonerProfile
     {
         [JsonProperty("accountId")]
-        public int AccountId { get; set; }
+        public long AccountId { get; set; }
 
         [JsonProperty("displayName")]
         public string DisplayName { get; set; }

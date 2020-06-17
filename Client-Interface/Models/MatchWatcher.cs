@@ -173,12 +173,16 @@ namespace ServerAppDemo.Models
             {
                 procs = Process.GetProcessesByName("League of Legends");
 
-                Process Proc = procs[0];
-
-                if (!Proc.HasExited)
+                if(procs.Length > 0)
                 {
-                    Proc.CloseMainWindow();
+                    Process Proc = procs[0];
+
+                    if (!Proc.HasExited)
+                    {
+                        Proc.CloseMainWindow();
+                    }
                 }
+
             }
             finally
             {
