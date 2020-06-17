@@ -115,9 +115,9 @@
 </section>
 
 @code {
-    HubConnection hubConnection;
+        HubConnection hubConnection;
 
-    private bool inQueue { get; set; }
+private bool inQueue { get; set; }
     private bool MatchFoundScreen { get; set; }
     public string textMatchFound { get; set; }
     public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
@@ -144,9 +144,11 @@
                     url = "https://onevonematchmaking.azurewebsites.net/onevone";
                     break;
                 case Regions.NA:
-                    url = "https://onevonematchmaking.azurewebsites.net/onevone";
+                    url = "https://onevonena.azurewebsites.net/onevone";
                     break;
-
+                default:
+                    url = "https://onevonematchmakingall.azurewebsites.net/onevone";
+                    break;
 
             }
         }

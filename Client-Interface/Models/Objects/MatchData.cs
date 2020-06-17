@@ -8,16 +8,17 @@ namespace ServerAppDemo.Models.Objects
     public class Match
     {
         public Guid MatchId { get; set; }
-        public Player RedPlayer { get; set; }
-        public Player BluePlayer { get; set; }
+        public MatchmakingPlayer RedPlayer { get; set; }
+        public MatchmakingPlayer BluePlayer { get; set; }
 
     }
-    public class Player
+    public class MatchmakingPlayer
     {
         public string ConnectionId { get; set; }
         public string SummonerId { get; set; }
         public int Elo { get; set; }
         public int SearchElo { get; set; }
+        public Regions region { get; set; }
         public DateTime Created { get; set; }
     }
     public class MatchResult
