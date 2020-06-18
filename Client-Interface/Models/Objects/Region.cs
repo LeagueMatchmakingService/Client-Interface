@@ -33,6 +33,7 @@ namespace ServerAppDemo.Models.Objects
         OCE,
         LAS,
         LAN,
-        JP
+        JP,
+        OC1
     }
 }

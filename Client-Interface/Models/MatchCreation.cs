@@ -80,7 +80,7 @@ namespace ServerAppDemo.Models
         public async Task<int> GetSummonerMMR(string summonerId)
         {
             var http = new HttpClient();
-            var uri = "https://elorestapi.azurewebsites.net/api/Elo/GetOneVOneElo/" + summonerId;
+            var uri = "https://elorestapi.azurewebsites.net/api/Elo/GetOneVOneMMR/" + summonerId;
             var response = await http.GetAsync(uri);
             var elo = JsonConvert.DeserializeObject<int>(await response.Content.ReadAsStringAsync());
             return elo;
