@@ -65,6 +65,11 @@ namespace ServerAppDemo.Models
        
         }
 
+        public async Task<bool> CheckIfUserCanQueue()
+        {
+            return true;
+        }
+
         public async Task CheckIfUserExists()
         {
             var player = await GetSummoner();

@@ -11,6 +11,6 @@ namespace ServerAppDemo.Models.Objects
         public string Name { get; set; }
         public int Elo { get; set; }
 
-
+        public Regions Region { get; set; }
     }
 }

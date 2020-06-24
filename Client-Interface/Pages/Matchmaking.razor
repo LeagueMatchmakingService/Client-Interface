@@ -60,6 +60,7 @@
                         @if (inQueue)
                         {
                             <h4>@timer</h4>
+                            <button @onclick="CancelQueue" class="cancelQueue">Cancel queue</button>
                         }
                         else
                         {
@@ -85,6 +86,11 @@
                             else
                             {
                                 <button @onclick="JoinOneVOneQueue">Queue up</button>
+                                if (NotAbleToQueue)
+                                {
+                                    <text>Not able to queue atm</text>
+                                }
+                                <button @onclick="CancelQueue" class="cancelQueue">Cancel queue</button>
                             }
                         }
                     }
@@ -115,11 +121,12 @@
 </section>
 
 @code {
-        HubConnection hubConnection;
+    HubConnection hubConnection;
 
-private bool inQueue { get; set; }
+    private bool inQueue { get; set; }
     private bool MatchFoundScreen { get; set; }
     public string textMatchFound { get; set; }
+    public bool NotAbleToQueue { get; set; }
     public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
     private string SummonerId { get; set; }
     private bool TryingToJoinQueue = false;
@@ -173,6 +180,16 @@ private bool inQueue { get; set; }
 
     private async Task JoinOneVOneQueue(MouseEventArgs x)
     {
+        var canqueue = await mc.CheckIfUserCanQueue();
+        if (!canqueue)
+        {
+            NotAbleToQueue = true;
+            return;
+        }
+        else
+        {
+            NotAbleToQueue = false;
+        }
         TryingToJoinQueue = true;
         try
         {
@@ -198,6 +215,19 @@ private bool inQueue { get; set; }
         catch (Exception e)
         {
             OneVOneQueueDisabled = true;
+        }
+    }
+
+    private async Task CancelQueue(MouseEventArgs x)
+    {
+        if (hubConnection.State == HubConnectionState.Connected)
+        {
+            await hubConnection.StopAsync();
+            inQueue = false;
+            TryingToJoinQueue = false;
+            is_timerRunning = false;
+            timer = new TimeSpan();
+            StateHasChanged();
         }
     }
 
